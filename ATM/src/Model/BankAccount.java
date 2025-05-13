@@ -35,7 +35,7 @@ package Model;
         public void withdraw(double amount) {
             if (amount <= 0) {
                 System.out.println("Số tiền rút không hợp lệ!");
-            } else if (amount > balance) {
+            } else if (amount > (balance-50000)) {
                 System.out.println("Số dư không đủ!");
             } else {
                 balance -= amount;
