@@ -7,7 +7,7 @@ public class PeaShooter extends GameObject implements Shooter {
     @Override
     public void shoot(Zombie target) {
         System.out.println("PeaShooter bắn vào Zombie!");
-        target.takeDamage(20);
+        target.takeDamage(   20);
     }
 
     @Override
