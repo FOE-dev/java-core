@@ -1,5 +1,7 @@
 package Controller;
 
+import java.util.regex.Pattern;
+import java.text.Normalizer;
 import Model.Book;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -8,6 +10,12 @@ public class LibraryManager {
     private ArrayList<Book> books = new ArrayList<>();
     private Scanner sc = new Scanner(System.in);
 
+    public static String removeVietnameseTones(String str) {
+        str = Normalizer.normalize(str, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        str = pattern.matcher(str).replaceAll("");
+        return str.replaceAll("đ", "d").replaceAll("Đ", "D");
+    }
     // Thêm sách
     public void addBook() {
         System.out.print("Nhập mã sách: ");
@@ -25,13 +33,16 @@ public class LibraryManager {
         System.out.println(" Thêm sách thành công.");
     }
 
-    // Tìm kiếm theo tên (có chứa chuỗi tìm kiếm, không phân biệt hoa thường)
+    // Tìm kiếm theo tên (không dấu, không phân biệt hoa thường)
     public void searchByTitle() {
-        System.out.print("Nhập từ khóa tên sách: ");
+        System.out.print("Nhập từ khóa tên sách (không dấu): ");
         String keyword = sc.nextLine().toLowerCase();
         boolean found = false;
+        String normalizedKeyword = removeVietnameseTones(keyword);
+
         for (Book b : books) {
-            if (b.getTitle().toLowerCase().contains(keyword)) {
+            String normalizedTitle = removeVietnameseTones(b.getTitle()).toLowerCase();
+            if (normalizedTitle.contains(normalizedKeyword)) {
                 System.out.println(b);
                 found = true;
             }
@@ -41,13 +52,16 @@ public class LibraryManager {
         }
     }
 
-    // Tìm kiếm theo tác giả (có chứa chuỗi tìm kiếm, không phân biệt hoa thường)
+    // Tìm kiếm theo tác giả (không dấu, không phân biệt hoa thường)
     public void searchByAuthor() {
-        System.out.print("Nhập từ khóa tác giả: ");
+        System.out.print("Nhập từ khóa tác giả (không dấu): ");
         String keyword = sc.nextLine().toLowerCase();
         boolean found = false;
+        String normalizedKeyword = removeVietnameseTones(keyword);
+
         for (Book b : books) {
-            if (b.getAuthor().toLowerCase().contains(keyword)) {
+            String normalizedAuthor = removeVietnameseTones(b.getAuthor()).toLowerCase();
+            if (normalizedAuthor.contains(normalizedKeyword)) {
                 System.out.println(b);
                 found = true;
             }
@@ -56,6 +70,7 @@ public class LibraryManager {
             System.out.println("Không tìm thấy sách theo tác giả.");
         }
     }
+
 
     // Hiển thị tất cả sách
     public void showAll() {
